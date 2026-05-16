@@ -1,0 +1,54 @@
+{
+  "entities": {
+    "Log": {
+      "title": "Execution Log",
+      "description": "System event audit trail",
+      "type": "object",
+      "properties": {
+        "event": { "type": "string" },
+        "id": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "actor": { "type": "string" }
+      },
+      "required": ["event", "actor", "timestamp"]
+    },
+    "Institution": {
+      "title": "Institutional Data",
+      "description": "Financial institution exposure data",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "exposure": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["name", "exposure"]
+    },
+    "AIService": {
+      "title": "AI Service",
+      "description": "Offered AI service with image and price",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "price": { "type": "number" },
+        "imageUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "price", "imageUrl"]
+    }
+  },
+  "firestore": {
+    "logs/{logId}": {
+      "schema": "Log",
+      "description": "Collection of system logs"
+    },
+    "institutions/{institutionId}": {
+      "schema": "Institution",
+      "description": "List of tracked institutions"
+    },
+    "ai_services/{serviceId}": {
+      "schema": "AIService",
+      "description": "List of AI services"
+    }
+  }
+}

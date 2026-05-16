@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@1,400;1,500;1,600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Playfair Display", serif;
+
+  /* Sophisticated Dark Theme Colors */
+  --color-bg-main: #0A0A0B;
+  --color-bg-sidebar: #0D0D0E;
+  --color-border-subtle: #27272A;
+  --color-accent-gold: #C5A059;
+  --color-card-bg: #111112;
+  --color-card-active: #1A1A1B;
+  
+  /* Retain these but map them if needed */
+  --color-primary-blue: #C5A059; /* Mapping blue to gold for theme consistency */
+  --color-sidebar-bg: #0D0D0E;
+  --color-sidebar-active: #1A1A1B;
+  --color-sidebar-icon: #71717A;
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased bg-bg-main text-gray-400;
+  }
+}
+
+/* Custom scrollbar for sidebar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(197, 160, 89, 0.2);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(197, 160, 89, 0.4);
+}

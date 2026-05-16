@@ -1,0 +1,6 @@
+{
+  "name": "Fuse Admin Dashboard",
+  "description": "A comprehensive, modern admin dashboard with analytics, project management, and various data visualizations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
