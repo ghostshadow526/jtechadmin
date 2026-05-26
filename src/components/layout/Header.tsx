@@ -8,12 +8,14 @@ import {
   ChevronDown,
   LayoutGrid,
   LogIn,
-  LogOut
+  LogOut,
+  Menu,
+  X
 } from 'lucide-react';
 import { useAuth } from '@/src/components/FirebaseProvider';
 import { loginWithGoogle, logout } from '@/src/lib/firebase';
 
-export default function Header() {
+export default function Header({ sidebarOpen, onSidebarToggle }: { sidebarOpen: boolean; onSidebarToggle: (open: boolean) => void }) {
   const { user, handleLogout } = useAuth();
 
   const handleSignOut = async () => {
@@ -22,10 +24,19 @@ export default function Header() {
   };
 
   return (
-    <header className="h-20 bg-bg-main border-b border-border-subtle flex items-center justify-between px-10 sticky top-0 z-40">
+    <header className="h-20 bg-bg-main border-b border-border-subtle flex items-center justify-between px-4 lg:px-10 sticky top-0 z-40">
       <div className="flex items-center gap-4">
+        {/* Mobile Menu Toggle */}
+        <button
+          onClick={() => onSidebarToggle(!sidebarOpen)}
+          className="lg:hidden text-accent-gold hover:text-white transition-colors p-2 hover:bg-accent-gold/10"
+          title="Toggle Navigation"
+        >
+          {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+
         <img src="/logo.png" alt="Jtech Logo" className="h-12 w-12 object-contain" />
-        <h2 className="text-white text-xl font-serif italic tracking-wide">Strategic Dashboard</h2>
+        <h2 className="text-white text-lg lg:text-xl font-serif italic tracking-wide hidden sm:block">Strategic Dashboard</h2>
       </div>
       
       <div className="flex items-center gap-8">

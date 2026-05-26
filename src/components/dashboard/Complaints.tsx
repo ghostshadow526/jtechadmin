@@ -166,16 +166,16 @@ export default function Complaints() {
   };
 
   return (
-    <div className="p-10 space-y-10">
+    <div className="p-4 lg:p-10 space-y-6 lg:space-y-10">
       {/* Notification */}
       {notification.visible && (
-        <div className="fixed top-8 right-8 bg-black border border-white px-6 py-4 text-white text-sm font-mono uppercase tracking-widest animate-in fade-in z-50 max-w-xs">
+        <div className="fixed top-20 right-4 lg:right-8 bg-black border border-white px-4 lg:px-6 py-4 text-white text-sm font-mono uppercase tracking-widest animate-in fade-in z-50 max-w-xs">
           {notification.message}
         </div>
       )}
 
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-serif italic text-white tracking-widest uppercase">Customer Complaints</h2>
+      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
+        <h2 className="text-xl lg:text-2xl font-serif italic text-white tracking-widest uppercase">Customer Complaints</h2>
         <div className="flex items-center gap-4">
           <button
             onClick={handleRefresh}
@@ -191,7 +191,7 @@ export default function Complaints() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
         {/* Complaints List */}
         <div className="lg:col-span-1 space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar">
           {loading ? (
@@ -240,17 +240,17 @@ export default function Complaints() {
         </div>
 
         {/* Complaint Details & Messages */}
-        <div className="lg:col-span-2 bg-card-bg border border-border-subtle p-8 space-y-6 flex flex-col h-[600px]">
+        <div className="lg:col-span-2 bg-card-bg border border-border-subtle p-6 lg:p-8 space-y-6 flex flex-col h-[600px]">
           {selectedComplaint ? (
             <>
               {/* Complaint Header */}
               <div className="space-y-4 pb-4 border-b border-border-subtle">
-                <div className="flex items-start justify-between">
-                  <div>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
                     <h3 className="text-lg font-medium text-white">{selectedComplaint.name}</h3>
-                    <p className="text-[10px] text-gray-500 font-mono">{selectedComplaint.email}</p>
+                    <p className="text-[10px] text-gray-500 font-mono break-all">{selectedComplaint.email}</p>
                   </div>
-                  <span className={`text-[8px] font-mono px-3 py-1 ${
+                  <span className={`text-[8px] font-mono px-3 py-1 whitespace-nowrap ${
                     selectedComplaint.status === 'completed'
                       ? 'bg-green-900/30 text-green-400'
                       : 'bg-yellow-900/30 text-yellow-400'
@@ -275,7 +275,7 @@ export default function Complaints() {
               <div className="flex-1 overflow-y-auto space-y-4 py-4">
                 {selectedComplaint.messages.length === 0 ? (
                   <div className="h-full flex items-center justify-center text-gray-500">
-                    <p className="text-[10px] uppercase tracking-widest">No messages yet. Send the first response.</p>
+                    <p className="text-[10px] uppercase tracking-widest text-center">No messages yet. Send the first response.</p>
                   </div>
                 ) : (
                   selectedComplaint.messages.map((message, idx) => (
@@ -283,11 +283,11 @@ export default function Complaints() {
                       key={idx} 
                       className={`p-3 rounded-sm border ${
                         message.sender === 'Admin'
-                          ? 'bg-green-900/20 border-green-900/30 ml-8'
-                          : 'bg-blue-900/20 border-blue-900/30 mr-8'
+                          ? 'bg-green-900/20 border-green-900/30 ml-0 lg:ml-8'
+                          : 'bg-blue-900/20 border-blue-900/30 mr-0 lg:mr-8'
                       }`}
                     >
-                      <div className="flex justify-between items-center mb-2">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-2">
                         <span className={`text-[9px] font-bold uppercase tracking-widest ${
                           message.sender === 'Admin' ? 'text-green-400' : 'text-blue-400'
                         }`}>
@@ -314,7 +314,7 @@ export default function Complaints() {
                       className="w-full bg-card-active border border-border-subtle p-3 text-white text-sm focus:border-accent-gold/50 outline-none transition-colors font-mono resize-none h-24"
                     />
                   </div>
-                  <div className="flex gap-3">
+                  <div className="flex flex-col gap-3">
                     <button
                       onClick={handleSendMessage}
                       disabled={!responseText.trim()}
@@ -350,7 +350,7 @@ export default function Complaints() {
           ) : (
             <div className="h-full flex flex-col items-center justify-center gap-4 text-gray-500">
               <AlertCircle size={32} />
-              <p className="text-[10px] uppercase tracking-widest">Select a complaint to view details</p>
+              <p className="text-[10px] uppercase tracking-widest text-center">Select a complaint to view details</p>
             </div>
           )}
         </div>
