@@ -31,11 +31,19 @@ export default function App() {
 
   return (
     <FirebaseProvider>
-      <div className="flex bg-bg-main min-h-screen text-gray-400">
-        {/* Fixed Sidebar - Hidden on mobile */}
-        <div className={`transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-0'} hidden lg:block`}>
+      <div className="flex bg-bg-main min-h-screen text-gray-400 relative">
+        {/* Fixed Sidebar - Mobile overlay / Desktop sidebar */}
+        <div className={`fixed lg:relative top-20 left-0 h-screen lg:h-auto transition-all duration-300 z-30 lg:z-0 ${sidebarOpen ? 'w-64 block' : 'w-0 hidden lg:block'} lg:w-64`}>
           <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
+
+        {/* Backdrop for mobile sidebar */}
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 lg:hidden z-20 top-20"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
 
         {/* Main Content Area */}
         <main className="flex-1 mr-16 lg:ml-0">
