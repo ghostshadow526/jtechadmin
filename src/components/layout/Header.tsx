@@ -23,7 +23,8 @@ export default function Header() {
 
   return (
     <header className="h-20 bg-bg-main border-b border-border-subtle flex items-center justify-between px-10 sticky top-0 z-40">
-      <div>
+      <div className="flex items-center gap-4">
+        <img src="/logo.png" alt="Jtech Logo" className="h-12 w-12 object-contain" />
         <h2 className="text-white text-xl font-serif italic tracking-wide">Strategic Dashboard</h2>
       </div>
       
