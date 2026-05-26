@@ -88,7 +88,7 @@ export default function Complaints() {
       setTimeout(() => setNotification({ message: '', visible: false }), 3000);
     } catch (error) {
       console.error('Error sending message:', error);
-      handleFirestoreError(error, OperationType.UPDATE, `complaints/${selectedComplaint.id}`);
+      handleFirestoreError(error, OperationType.UPDATE, `customer_care/${selectedComplaint.id}`);
     }
   };
 
