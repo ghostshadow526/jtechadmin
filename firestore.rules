@@ -65,8 +65,8 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Complaints collection
-    match /complaints/{document=**} {
+    // Customer Care collection
+    match /customer_care/{document=**} {
       allow read: if isAuthenticated();
       allow create: if isAuthenticated();
       allow update: if isAuthenticated();

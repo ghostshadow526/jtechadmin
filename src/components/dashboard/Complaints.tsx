@@ -32,7 +32,7 @@ export default function Complaints() {
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
-        const complaintsSnap = await getDocs(collection(db, 'complaints'));
+        const complaintsSnap = await getDocs(collection(db, 'customer_care'));
         const complaintsData = complaintsSnap.docs.map(doc => {
           const data = doc.data();
           return {
@@ -51,7 +51,7 @@ export default function Complaints() {
         setLoading(false);
       } catch (error) {
         console.error('Error fetching complaints:', error);
-        handleFirestoreError(error, OperationType.LIST, 'complaints');
+        handleFirestoreError(error, OperationType.LIST, 'customer_care');
       }
     };
 
@@ -69,7 +69,7 @@ export default function Complaints() {
         timestamp: new Date()
       };
 
-      await updateDoc(doc(db, 'complaints', selectedComplaint.id), {
+      await updateDoc(doc(db, 'customer_care', selectedComplaint.id), {
         messages: arrayUnion(newMessage),
         updatedAt: serverTimestamp()
       });
@@ -96,7 +96,7 @@ export default function Complaints() {
     if (!selectedComplaint) return;
 
     try {
-      await updateDoc(doc(db, 'complaints', selectedComplaint.id), {
+      await updateDoc(doc(db, 'customer_care', selectedComplaint.id), {
         status: 'completed'
       });
 
@@ -112,7 +112,7 @@ export default function Complaints() {
       setTimeout(() => setNotification({ message: '', visible: false }), 3000);
     } catch (error) {
       console.error('Error updating complaint:', error);
-      handleFirestoreError(error, OperationType.UPDATE, `complaints/${selectedComplaint.id}`);
+      handleFirestoreError(error, OperationType.UPDATE, `customer_care/${selectedComplaint.id}`);
     }
   };
 
@@ -120,7 +120,7 @@ export default function Complaints() {
     if (!selectedComplaint) return;
 
     try {
-      await deleteDoc(doc(db, 'complaints', selectedComplaint.id));
+      await deleteDoc(doc(db, 'customer_care', selectedComplaint.id));
 
       setComplaints(complaints.filter(c => c.id !== selectedComplaint.id));
       setSelectedComplaint(null);
@@ -129,7 +129,7 @@ export default function Complaints() {
       setTimeout(() => setNotification({ message: '', visible: false }), 3000);
     } catch (error) {
       console.error('Error deleting complaint:', error);
-      handleFirestoreError(error, OperationType.DELETE, `complaints/${selectedComplaint.id}`);
+      handleFirestoreError(error, OperationType.DELETE, `customer_care/${selectedComplaint.id}`);
     }
   };
 
