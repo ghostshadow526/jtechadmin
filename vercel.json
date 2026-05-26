@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "vite.config.ts",
+      "use": "@vercel/vite",
+      "config": {
+        "serverFiles": ["dist/server.cjs"]
+      }
+    },
+    {
+      "src": "dist/server.cjs",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/dist/server.cjs"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dist/index.html"
+    }
+  ]
+}
