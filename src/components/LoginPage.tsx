@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { LogIn, AlertCircle } from 'lucide-react';
 
 interface LoginPageProps {
-  onLogin: (email: string) => void;
+  onLogin: (email: string, password: string) => Promise<void>;
 }
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
@@ -20,11 +20,13 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     setError('');
     setLoading(true);
 
-    // Simulate auth delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-
     if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-      onLogin(email);
+      try {
+        await onLogin(email, password);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
+        setPassword('');
+      }
     } else {
       setError('Invalid email or password');
       setPassword('');

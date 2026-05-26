@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from '@/src/lib/firebase';
+import { auth, db, loginWithEmailPassword, logout as firebaseLogout } from '@/src/lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import LoginPage from './LoginPage';
 
@@ -26,8 +26,12 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       
-      // Create user document in Firestore if it doesn't exist
+      // Set portal auth when Firebase user exists
       if (user) {
+        setIsPortalAuthenticated(true);
+        sessionStorage.setItem('portalAuthenticated', 'true');
+        
+        // Create user document in Firestore if it doesn't exist
         try {
           const userDocRef = doc(db, 'users', user.uid);
           await setDoc(userDocRef, {
@@ -50,15 +54,26 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return () => unsubscribe();
   }, []);
 
-  const handlePortalLogin = (email: string) => {
-    setIsPortalAuthenticated(true);
-    sessionStorage.setItem('portalAuthenticated', 'true');
+  const handlePortalLogin = async (email: string, password: string) => {
+    try {
+      // Sign in to Firebase
+      await loginWithEmailPassword(email, password);
+      // Portal authentication will be set by the onAuthStateChanged listener
+      sessionStorage.setItem('portalAuthenticated', 'true');
+    } catch (error) {
+      console.error('Firebase login failed:', error);
+      throw error;
+    }
   };
 
-  const handleLogout = () => {
-    setIsPortalAuthenticated(false);
-    sessionStorage.removeItem('portalAuthenticated');
-    setUser(null);
+  const handleLogout = async () => {
+    try {
+      setIsPortalAuthenticated(false);
+      sessionStorage.removeItem('portalAuthenticated');
+      await firebaseLogout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   if (!isPortalAuthenticated) {
