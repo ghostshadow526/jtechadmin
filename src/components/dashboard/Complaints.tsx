@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, updateDoc, doc, arrayUnion, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, updateDoc, doc, arrayUnion, serverTimestamp, deleteDoc } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType } from '@/src/lib/firebase';
 import { useAuth } from '@/src/components/FirebaseProvider';
-import { Loader2, Send, AlertCircle, CheckCircle } from 'lucide-react';
+import { Loader2, Send, AlertCircle, CheckCircle, Trash2 } from 'lucide-react';
 
 interface Message {
   sender: string;
@@ -113,6 +113,23 @@ export default function Complaints() {
     } catch (error) {
       console.error('Error updating complaint:', error);
       handleFirestoreError(error, OperationType.UPDATE, `complaints/${selectedComplaint.id}`);
+    }
+  };
+
+  const handleDeleteComplaint = async () => {
+    if (!selectedComplaint) return;
+
+    try {
+      await deleteDoc(doc(db, 'complaints', selectedComplaint.id));
+
+      setComplaints(complaints.filter(c => c.id !== selectedComplaint.id));
+      setSelectedComplaint(null);
+      
+      setNotification({ message: 'Complaint deleted successfully!', visible: true });
+      setTimeout(() => setNotification({ message: '', visible: false }), 3000);
+    } catch (error) {
+      console.error('Error deleting complaint:', error);
+      handleFirestoreError(error, OperationType.DELETE, `complaints/${selectedComplaint.id}`);
     }
   };
 
@@ -274,8 +291,17 @@ export default function Complaints() {
                   </div>
                 </div>
               ) : (
-                <div className="pt-4 border-t border-border-subtle bg-green-900/20 border-green-900/30 p-4 rounded-sm text-center">
-                  <p className="text-[10px] text-green-400 font-bold uppercase tracking-widest">✓ This complaint has been completed</p>
+                <div className="pt-4 border-t border-border-subtle space-y-3">
+                  <div className="bg-green-900/20 border border-green-900/30 p-4 rounded-sm text-center">
+                    <p className="text-[10px] text-green-400 font-bold uppercase tracking-widest">✓ This complaint has been completed</p>
+                  </div>
+                  <button
+                    onClick={handleDeleteComplaint}
+                    className="w-full bg-red-900/30 text-red-400 border border-red-900/50 p-3 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-red-900/50 transition-all flex items-center justify-center gap-2"
+                  >
+                    <Trash2 size={14} />
+                    Delete Complaint
+                  </button>
                 </div>
               )}
             </>
