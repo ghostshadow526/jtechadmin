@@ -11,7 +11,7 @@ const publicKey = import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY || 'public_71xCzGlh+6
 
 const authenticator = async () => {
     try {
-        const response = await fetch('/api/imagekit/auth');
+        const response = await fetch('/api/imagekit-auth');
         if (!response.ok) {
             const errorText = await response.text();
             throw new Error(`Request failed with status ${response.status}: ${errorText}`);

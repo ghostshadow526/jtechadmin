@@ -16,7 +16,7 @@ const imagekit = new ImageKit({
 app.use(express.json());
 
 // ImageKit Authentication Endpoint
-app.get("/api/imagekit/auth", (req, res) => {
+app.get("/api/imagekit-auth", (req, res) => {
   try {
     const result = imagekit.getAuthenticationParameters();
     res.json(result);
