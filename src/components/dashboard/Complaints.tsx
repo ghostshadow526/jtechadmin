@@ -33,32 +33,56 @@ export default function Complaints() {
   const fetchComplaints = async () => {
     try {
       setLoading(true);
+      console.log('Fetching complaints from customer_care...');
       const complaintsSnap = await getDocs(collection(db, 'customer_care'));
-      const complaintsData = complaintsSnap.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          complaint: data.complaint || data.issue,
-          status: data.status || 'pending',
-          messages: data.messages || []
-        };
-      }) as Complaint[];
+      console.log('Total docs:', complaintsSnap.docs.length);
       
-      const sorted = complaintsData.sort((a, b) => {
-        const aTime = a.createdAt?.toDate?.().getTime() || 0;
-        const bTime = b.createdAt?.toDate?.().getTime() || 0;
-        return bTime - aTime;
+      const complaintsData = complaintsSnap.docs.map(doc => {
+        try {
+          const data = doc.data();
+          const mapped = {
+            id: doc.id,
+            name: data.name || 'Unknown',
+            email: data.email || 'unknown@email.com',
+            complaint: data.complaint || data.issue || 'No details provided',
+            messages: Array.isArray(data.messages) ? data.messages : [],
+            createdAt: data.createdAt || null,
+            status: data.status || 'pending'
+          } as Complaint;
+          return mapped;
+        } catch (mapError) {
+          console.error('Error mapping document:', doc.id, mapError);
+          throw mapError;
+        }
       });
       
+      console.log('Mapped complaints:', complaintsData.length);
+      
+      const sorted = complaintsData.sort((a, b) => {
+        try {
+          const aTime = a.createdAt && typeof a.createdAt.toDate === 'function' ? a.createdAt.toDate().getTime() : 0;
+          const bTime = b.createdAt && typeof b.createdAt.toDate === 'function' ? b.createdAt.toDate().getTime() : 0;
+          return bTime - aTime;
+        } catch (sortError) {
+          console.error('Sort error:', sortError);
+          return 0;
+        }
+      });
+      
+      console.log('Sorted complaints:', sorted.length);
       setComplaints(sorted);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching complaints:', error);
-      handleFirestoreError(error, OperationType.LIST, 'customer_care');
+      setComplaints([]);
       setLoading(false);
+      handleFirestoreError(error, OperationType.LIST, 'customer_care');
     }
   };
+
+  useEffect(() => {
+    fetchComplaints();
+  }, []);
 
   const handleRefresh = () => {
     fetchComplaints();
