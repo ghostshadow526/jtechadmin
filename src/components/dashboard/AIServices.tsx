@@ -109,8 +109,13 @@ export default function AIServices() {
     try {
       await deleteDoc(doc(db, 'aiServices', serviceId));
       console.log('Service deleted successfully:', serviceId);
+      setNotification({ message: 'Tool deleted successfully!', visible: true });
+      setTimeout(() => setNotification({ message: '', visible: false }), 3000);
     } catch (error) {
       console.error('Error deleting service:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete service';
+      setNotification({ message: `Error: ${errorMessage}`, visible: true });
+      setTimeout(() => setNotification({ message: '', visible: false }), 5000);
       handleFirestoreError(error, OperationType.DELETE, `aiServices/${serviceId}`);
     }
   };

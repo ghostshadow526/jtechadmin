@@ -18,7 +18,9 @@ export const useAuth = () => useContext(AuthContext);
 export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isPortalAuthenticated, setIsPortalAuthenticated] = useState(false);
+  const [isPortalAuthenticated, setIsPortalAuthenticated] = useState(() => {
+    return sessionStorage.getItem('portalAuthenticated') === 'true';
+  });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -50,10 +52,12 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const handlePortalLogin = (email: string) => {
     setIsPortalAuthenticated(true);
+    sessionStorage.setItem('portalAuthenticated', 'true');
   };
 
   const handleLogout = () => {
     setIsPortalAuthenticated(false);
+    sessionStorage.removeItem('portalAuthenticated');
     setUser(null);
   };
 

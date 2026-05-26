@@ -15,6 +15,7 @@ service cloud.firestore {
     function isAdmin() {
       return isAuthenticated() && (
         request.auth.token.email == "clhoetash@gmail.com" ||
+        request.auth.token.email == "joshuamicheal@gmail.com" ||
         (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
       );
@@ -47,9 +48,10 @@ service cloud.firestore {
     }
 
     // AI Services collection
-    match /aiServices/{document=**} {
+    match /aiServices/{serviceId} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
     }
 
     // AI Tools collection
@@ -58,12 +60,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Complaints collection
-    match /complaints/{document=**} {
-      allow read: if isAuthenticated();
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated();
-    }
+   // Complaints collection
+match /complaints/{document=**} {
+  allow read: if isAuthenticated();
+  allow create: if isAuthenticated();
+  allow update: if isAuthenticated();
+}
 
     // Transactions collection
     match /transactions/{document=**} {
