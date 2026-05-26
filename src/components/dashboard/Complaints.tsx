@@ -45,9 +45,11 @@ export default function Complaints() {
         };
       }) as Complaint[];
       
-      const sorted = complaintsData.sort((a, b) => 
-        new Date(b.createdAt?.toDate()).getTime() - new Date(a.createdAt?.toDate()).getTime()
-      );
+      const sorted = complaintsData.sort((a, b) => {
+        const aTime = a.createdAt?.toDate?.().getTime() || 0;
+        const bTime = b.createdAt?.toDate?.().getTime() || 0;
+        return bTime - aTime;
+      });
       
       setComplaints(sorted);
       setLoading(false);
@@ -206,7 +208,7 @@ export default function Complaints() {
                 <p className="text-[10px] text-gray-400 line-clamp-2 mb-2">{complaint.complaint}</p>
                 <div className="flex justify-between text-[9px] text-gray-500">
                   <span>{complaint.messages.length} messages</span>
-                  <span>{new Date(complaint.createdAt?.toDate()).toLocaleDateString()}</span>
+                  <span>{complaint.createdAt?.toDate ? new Date(complaint.createdAt.toDate()).toLocaleDateString() : 'N/A'}</span>
                 </div>
               </div>
             ))
@@ -241,7 +243,7 @@ export default function Complaints() {
                 </div>
 
                 <div className="text-[9px] text-gray-500">
-                  Submitted: {new Date(selectedComplaint.createdAt?.toDate()).toLocaleString()}
+                  Submitted: {complaint.createdAt?.toDate ? new Date(complaint.createdAt.toDate()).toLocaleString() : 'N/A'}
                 </div>
               </div>
 
@@ -268,7 +270,7 @@ export default function Complaints() {
                           {message.sender}
                         </span>
                         <span className="text-[8px] text-gray-500">
-                          {new Date(message.timestamp?.toDate?.()).toLocaleString()}
+                          {message.timestamp?.toDate ? new Date(message.timestamp.toDate()).toLocaleString() : message.timestamp?.seconds ? new Date(message.timestamp.seconds * 1000).toLocaleString() : 'N/A'}
                         </span>
                       </div>
                       <p className="text-sm text-gray-300">{message.text}</p>
