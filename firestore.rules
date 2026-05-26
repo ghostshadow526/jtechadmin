@@ -65,6 +65,14 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Complaints collection (legacy - for backwards compatibility)
+    match /complaints/{document=**} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated() && isCompleted(resource.data);
+    }
+
     // Customer Care collection
     match /customer_care/{document=**} {
       allow read: if isAuthenticated();
