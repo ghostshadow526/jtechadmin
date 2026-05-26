@@ -267,7 +267,7 @@ export default function Complaints() {
                 </div>
 
                 <div className="text-[9px] text-gray-500">
-                  Submitted: {complaint.createdAt?.toDate ? new Date(complaint.createdAt.toDate()).toLocaleString() : 'N/A'}
+                  Submitted: {selectedComplaint.createdAt?.toDate ? new Date(selectedComplaint.createdAt.toDate()).toLocaleString() : 'N/A'}
                 </div>
               </div>
 
