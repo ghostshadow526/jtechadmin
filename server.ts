@@ -40,5 +40,14 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
+// Export for serverless environment (Vercel, etc.)
 export default app;
+
+// For local development
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
 
