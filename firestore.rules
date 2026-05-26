@@ -21,6 +21,10 @@ service cloud.firestore {
       );
     }
 
+    function isCompleted(document) {
+      return document.status == 'completed';
+    }
+
     // Users collection
     match /users/{userId} {
       allow read: if isAuthenticated();
@@ -61,12 +65,13 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-   // Complaints collection
-match /complaints/{document=**} {
-  allow read: if isAuthenticated();
-  allow create: if isAuthenticated();
-  allow update: if isAuthenticated();
-}
+    // Complaints collection
+    match /complaints/{document=**} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated();
+      allow delete: if isAuthenticated() && isCompleted(resource.data);
+    }
 
     // Transactions collection
     match /transactions/{document=**} {
