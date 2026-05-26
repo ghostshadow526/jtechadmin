@@ -7,21 +7,24 @@ import React, { useState } from 'react';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
 import ActiveContacts from './components/layout/ActiveContacts';
-import AnalyticsDashboard from './components/dashboard/AnalyticsDashboard';
 import AIServices from './components/dashboard/AIServices';
+import Complaints from './components/dashboard/Complaints';
+import Users from './components/dashboard/Users';
 import { FirebaseProvider } from './components/FirebaseProvider';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('ai-services');
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'dashboard':
-        return <AnalyticsDashboard />;
       case 'ai-services':
         return <AIServices />;
+      case 'complaints':
+        return <Complaints />;
+      case 'users':
+        return <Users />;
       default:
-        return <AnalyticsDashboard />;
+        return <AIServices />;
     }
   };
 

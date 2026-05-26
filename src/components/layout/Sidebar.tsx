@@ -1,17 +1,15 @@
 import { 
-  LayoutDashboard, 
-  Mail, 
-  Users, 
-  GraduationCap
+  Mail,
+  AlertCircle,
+  Users as UsersIcon
 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 
 const navItems = [
   { group: 'MANAGEMENT', items: [
-    { name: 'Strategic Dashboard', icon: LayoutDashboard, id: 'dashboard' },
-    { name: 'AI Services Portfolio', icon: GraduationCap, id: 'ai-services' },
-    { name: 'Executive Logs', icon: Mail, id: 'logs' },
-    { name: 'Client Registry', icon: Users, id: 'clients' },
+    { name: 'AI Tools Listing', icon: Mail, id: 'ai-services' },
+    { name: 'Customer Complaints', icon: AlertCircle, id: 'complaints' },
+    { name: 'Users', icon: UsersIcon, id: 'users' },
   ]}
 ];
 
@@ -20,7 +18,7 @@ export default function Sidebar({ activeTab, onTabChange }: { activeTab: string,
     <aside className="w-64 bg-bg-sidebar text-gray-400 h-screen flex flex-col fixed left-0 top-0 z-50 border-r border-border-subtle">
       {/* Brand Header */}
       <div className="p-8">
-        <h1 className="text-accent-gold font-serif italic text-2xl tracking-tight leading-none">Aurelius</h1>
+        <h1 className="text-accent-gold font-serif italic text-2xl tracking-tight leading-none">j_tech Admin panel</h1>
         <p className="text-[10px] uppercase tracking-[0.2em] opacity-50 mt-1">Management Suite</p>
       </div>
 
