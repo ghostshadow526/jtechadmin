@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, updateDoc, doc, arrayUnion, serverTimestamp, deleteDoc } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType } from '@/src/lib/firebase';
 import { useAuth } from '@/src/components/FirebaseProvider';
-import { Loader2, Send, AlertCircle, CheckCircle, Trash2 } from 'lucide-react';
+import { Loader2, Send, AlertCircle, CheckCircle, Trash2, RefreshCw } from 'lucide-react';
 
 interface Message {
   sender: string;
@@ -15,7 +15,8 @@ interface Complaint {
   id: string;
   name: string;
   email: string;
-  complaint: string;
+  complaint?: string;
+  issue?: string;
   messages: Message[];
   createdAt: any;
   status: 'pending' | 'completed';
@@ -29,34 +30,39 @@ export default function Complaints() {
   const [responseText, setResponseText] = useState('');
   const [notification, setNotification] = useState<{ message: string; visible: boolean }>({ message: '', visible: false });
 
-  useEffect(() => {
-    const fetchComplaints = async () => {
-      try {
-        const complaintsSnap = await getDocs(collection(db, 'customer_care'));
-        const complaintsData = complaintsSnap.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            ...data,
-            status: data.status || 'pending',
-            messages: data.messages || []
-          };
-        }) as Complaint[];
-        
-        const sorted = complaintsData.sort((a, b) => 
-          new Date(b.createdAt?.toDate()).getTime() - new Date(a.createdAt?.toDate()).getTime()
-        );
-        
-        setComplaints(sorted);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching complaints:', error);
-        handleFirestoreError(error, OperationType.LIST, 'customer_care');
-      }
-    };
+  const fetchComplaints = async () => {
+    try {
+      setLoading(true);
+      const complaintsSnap = await getDocs(collection(db, 'customer_care'));
+      const complaintsData = complaintsSnap.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          complaint: data.complaint || data.issue,
+          status: data.status || 'pending',
+          messages: data.messages || []
+        };
+      }) as Complaint[];
+      
+      const sorted = complaintsData.sort((a, b) => 
+        new Date(b.createdAt?.toDate()).getTime() - new Date(a.createdAt?.toDate()).getTime()
+      );
+      
+      setComplaints(sorted);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching complaints:', error);
+      handleFirestoreError(error, OperationType.LIST, 'customer_care');
+      setLoading(false);
+    }
+  };
 
+  const handleRefresh = () => {
     fetchComplaints();
-  }, []);
+    setNotification({ message: 'Refreshing...', visible: true });
+    setTimeout(() => setNotification({ message: '', visible: false }), 2000);
+  };
 
   const handleSendMessage = async () => {
     if (!selectedComplaint || !responseText.trim()) return;
@@ -144,8 +150,18 @@ export default function Complaints() {
 
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-serif italic text-white tracking-widest uppercase">Customer Complaints</h2>
-        <div className="text-[10px] uppercase tracking-widest text-accent-gold font-mono">
-          {complaints.length} Total
+        <div className="flex items-center gap-4">
+          <button
+            onClick={handleRefresh}
+            disabled={loading}
+            className="flex items-center gap-2 px-4 py-2 bg-accent-gold/10 border border-accent-gold/30 text-accent-gold text-[10px] font-bold uppercase tracking-widest hover:bg-accent-gold/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+            Refresh
+          </button>
+          <div className="text-[10px] uppercase tracking-widest text-accent-gold font-mono">
+            {complaints.length} Total
+          </div>
         </div>
       </div>
 
